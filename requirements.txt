@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+networkx
+google-generativeai
+jinja2
+python-multipart
+pydantic
+httpx
+python-dotenv
+requests
+authlib
+itsdangerous
+cryptography
+matplotlib

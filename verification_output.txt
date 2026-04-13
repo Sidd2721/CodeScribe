@@ -1,0 +1,18 @@
+--- Analysis Result ---
+
+[CLASSES]
+- Dog
+  * method: __init__
+  * method: bark
+  * method: jump
+
+[FUNCTIONS]
+- walk_dog
+
+[CALLS]
+- Line 9: global.Dog.bark -> print
+- Line 10: global.Dog.bark -> self.jump
+- Line 13: global.Dog.jump -> print
+- Line 16: global.walk_dog -> Dog
+- Line 17: global.walk_dog -> d.bark
+- Line 19: global -> walk_dog
