@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeScribe AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div class="container text-center">
+        <div class="glass-card" style="margin-top: 10vh;">
+            <h1>CodeScribe AI</h1>
+            <p>Unlock the DNA of your Code. Deterministic. Precise. Zero Hallucinations.</p>
+
+            {% if request.session.get('user') %}
+            <div class="glass-card"
+                style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 20px;">
+                <img src="{{ request.session['user']['picture'] }}" alt="Profile" class="profile-img">
+                <h3>Welcome back, {{ request.session['user']['name'] }}</h3>
+                <p>{{ request.session['user']['email'] }}</p>
+
+                <div style="margin: 30px 0; border-top: 1px solid var(--glass-border); padding-top: 20px;">
+                    <h2 style="font-size: 1.5rem;">Start Analysis</h2>
+                    <form action="/upload/" method="post" enctype="multipart/form-data">
+                        <input type="file" name="file" required accept=".py">
+                        <button type="submit" class="btn">Analyze Code DNA</button>
+                    </form>
+                </div>
+
+                <a href="/auth/logout" class="btn btn-danger" style="margin-top: 20px;">Logout</a>
+            </div>
+            {% else %}
+            <div style="margin-top: 40px;">
+                <a href="/auth/login" class="btn">Login with Google (or Dev Mode)</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <p style="font-size: 0.8rem; opacity: 0.6;">&copy; 2026 CodeScribe AI. MVP Version.</p>
+    </div>
+</body>
+
+</html>

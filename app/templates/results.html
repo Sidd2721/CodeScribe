@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - CodeScribe AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Mermaid.js for interactive diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#4ecdc4',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#45b7d1',
+                lineColor: '#bb86fc',
+                secondaryColor: '#1a1a2e',
+                tertiaryColor: '#0f0f1a'
+            }
+        });
+    </script>
+    <style>
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(69, 183, 209, 0.08), rgba(187, 134, 252, 0.08));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 28px;
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-content h2 {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            line-height: 1.7;
+        }
+
+        .hero-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 12px;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        /* ===== AI REASONING TAB ===== */
+        .ai-reasoning-card {
+            background: linear-gradient(135deg, rgba(69, 183, 209, 0.06), rgba(187, 134, 252, 0.06));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .ai-reasoning-item {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .ai-reasoning-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .ai-reasoning-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .ai-reasoning-text {
+            font-size: 1rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(187, 134, 252, 0.15);
+            color: var(--accent-purple);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        /* ===== DEEP REASONING LAYERS ===== */
+        .reasoning-layer {
+            margin-bottom: 22px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .reasoning-layer:hover {
+            border-color: rgba(69, 183, 209, 0.3);
+            transform: translateX(2px);
+        }
+
+        .layer-header {
+            background: linear-gradient(135deg, rgba(69, 183, 209, 0.12), rgba(187, 134, 252, 0.12));
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .layer-number {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .layer-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--accent-blue);
+        }
+
+        .layer-content {
+            padding: 18px;
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .reasoning-subsection {
+            margin-bottom: 14px;
+        }
+
+        .reasoning-subsection:last-child {
+            margin-bottom: 0;
+        }
+
+        .reasoning-subsection strong {
+            color: var(--accent-purple);
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .reasoning-subsection p {
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* ===== GRAPH-SPECIFIC REASONING CARDS ===== */
+        .graph-reasoning-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 2px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .graph-specific-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .graph-specific-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(69, 183, 209, 0.25);
+        }
+
+        .graph-specific-header {
+            background: rgba(69, 183, 209, 0.1);
+            padding: 10px 16px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+        }
+
+        .graph-specific-content {
+            padding: 14px 16px;
+        }
+
+        .graph-specific-content p {
+            margin: 8px 0;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .graph-specific-content p:first-child {
+            margin-top: 0;
+        }
+
+        .graph-specific-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .graph-specific-content strong {
+            color: var(--accent-purple);
+        }
+
+
+        /* ===== MERMAID DIAGRAM CONTAINER ===== */
+        .mermaid-container {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 12px;
+            padding: 24px;
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ===== TABBED INTERFACE ===== */
+        .tabs-container {
+            margin: 30px 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px 14px 0 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: none;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 14px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 3px 3px 0 0;
+            transition: transform 0.25s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(69, 183, 209, 0.15), rgba(187, 134, 252, 0.15));
+            color: white;
+        }
+
+        .tab-btn.active::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .tab-btn .icon {
+            font-size: 1rem;
+        }
+
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.025);
+            border-radius: 0 0 14px 14px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeSlideIn 0.35s ease-out;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== GRAPH DISPLAY ===== */
+        .graph-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .graph-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+            transition: transform 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .graph-image:hover {
+            transform: scale(1.015);
+        }
+
+        .graph-placeholder {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.015);
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .graph-placeholder .icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        /* ===== TAB EXPLANATION ===== */
+        .tab-explanation {
+            background: linear-gradient(135deg, rgba(69, 183, 209, 0.08), rgba(187, 134, 252, 0.08));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .tab-explanation strong {
+            color: var(--accent-blue);
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-image {
+                width: 140px;
+                height: 140px;
+            }
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(69, 183, 209, 0.1), rgba(187, 134, 252, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 20px 16px;
+            text-align: center;
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(69, 183, 209, 0.15);
+        }
+
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* ===== CALL LIST ===== */
+        .call-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .call-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.025);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .call-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .call-line {
+            background: linear-gradient(135deg, var(--accent-purple), #9b59b6);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .call-arrow {
+            color: var(--accent-blue);
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* ===== HEADER BAR ===== */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .header-bar h1 {
+            margin-bottom: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== FILE BADGE ===== */
+        .file-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            padding: 40px;
+            overflow: auto;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #151520;
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .modal-close {
+            background: linear-gradient(135deg, #e94560, #d93025);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .report-pre {
+            background: #0a0a12;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: #e0e0e0;
+            white-space: pre-wrap;
+        }
+
+        /* ===== VIEW TOGGLE ===== */
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .view-toggle-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-toggle-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .view-static,
+        .view-interactive {
+            display: none;
+        }
+
+        .view-static.active,
+        .view-interactive.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header-bar animate-in">
+            <h1>📊 Analysis Report</h1>
+            <div class="header-actions">
+                <button onclick="showReport()" class="btn"
+                    style="background: linear-gradient(135deg, #00b894, #00cec9);">
+                    📄 View Report
+                </button>
+                <a href="/upload/report" class="btn" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">
+                    ⬇️ Download
+                </a>
+                <a href="/" class="btn btn-secondary">← Back</a>
+            </div>
+        </div>
+
+        <!-- File Badge -->
+        <div class="file-badge animate-in delay-1">
+            <span>📁</span>
+            <span>File: <strong>{{ filename }}</strong></span>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="hero-section animate-in delay-1">
+            <div class="hero-content">
+                <h2>Code DNA Analysis Complete</h2>
+                <p>Your code has been analyzed using deterministic static analysis.
+                    All insights are extracted directly from the code structure — no guessing, no hallucinations.
+                    Explore the visualizations below to understand your code's architecture.</p>
+            </div>
+            <img src="/static/images/hero_code_flow.png" alt="Code Flow Visualization" class="hero-image"
+                onerror="this.style.display='none'">
+        </div>
+
+        <!-- Report Modal -->
+        <div id="reportModal" class="modal-overlay" onclick="if(event.target===this)hideReport()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📄 Text Report</h2>
+                    <button onclick="hideReport()" class="modal-close">✕ Close</button>
+                </div>
+                <pre class="report-pre">{{ text_report }}</pre>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card animate-in delay-1">
+                <div class="number">{{ data.imports|length }}</div>
+                <div class="label">📥 Imports</div>
+            </div>
+            <div class="stat-card animate-in delay-2">
+                <div class="number">{{ data.classes|length }}</div>
+                <div class="label">📦 Classes</div>
+            </div>
+            <div class="stat-card animate-in delay-3">
+                <div class="number">{{ data.functions|length }}</div>
+                <div class="label">⚡ Functions</div>
+            </div>
+            <div class="stat-card animate-in delay-4">
+                <div class="number">{{ data.calls|length }}</div>
+                <div class="label">🔗 Calls</div>
+            </div>
+        </div>
+
+        <!-- Tabbed Visualizations -->
+        <div class="tabs-container animate-in delay-3">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="openTab(event, 'call-graph')">
+                    <span class="icon">🔗</span> Call Graph
+                </button>
+                <button class="tab-btn" onclick="openTab(event, 'class-diagram')">
+                    <span class="icon">📦</span> Classes
+                </button>
+                <button class="tab-btn" onclick="openTab(event, 'import-graph')">
+                    <span class="icon">📥</span> Imports
+                </button>
+                <button class="tab-btn" onclick="openTab(event, 'ai-reasoning')">
+                    <span class="icon">🤖</span> AI Reasoning
+                </button>
+                <button class="tab-btn" onclick="openTab(event, 'data-flow')">
+                    <span class="icon">📊</span> Data Flow
+                </button>
+                <button class="tab-btn" onclick="openTab(event, 'call-list')">
+                    <span class="icon">📋</span> Call List
+                </button>
+            </div>
+
+            <!-- Call Graph Tab -->
+            <div id="call-graph" class="tab-content active">
+                <div class="tab-explanation">
+                    <strong>What this shows:</strong> How functions call each other. Shapes indicate types: hexagons are
+                    entry points, rectangles are global functions, circles are built-ins.<br>
+                    <strong>Why it matters:</strong> Trace execution flow visually without reading code.
+                </div>
+
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" onclick="toggleView('call-graph', 'static')">📊
+                        Static</button>
+                    <button class="view-toggle-btn" onclick="toggleView('call-graph', 'interactive')">✨
+                        Interactive</button>
+                </div>
+
+                <div id="call-graph-static" class="view-static active">
+                    {% if call_graph_url %}
+                    <div class="graph-container">
+                        <img src="{{ call_graph_url }}" alt="Call Graph" class="graph-image">
+                    </div>
+                    {% else %}
+                    <div class="graph-placeholder">
+                        <div class="icon">🔗</div>
+                        <p>No function calls detected.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div id="call-graph-interactive" class="view-interactive">
+                    <div class="mermaid-container">
+                        <pre class="mermaid">{{ call_graph_mermaid }}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Class Diagram Tab -->
+            <div id="class-diagram" class="tab-content">
+                <div class="tab-explanation">
+                    <strong>What this shows:</strong> Class structure and method organization.<br>
+                    <strong>Why it matters:</strong> Understand your program's building blocks at a glance.
+                </div>
+
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" onclick="toggleView('class-diagram', 'static')">📊
+                        Static</button>
+                    <button class="view-toggle-btn" onclick="toggleView('class-diagram', 'interactive')">✨
+                        Interactive</button>
+                </div>
+
+                <div id="class-diagram-static" class="view-static active">
+                    {% if class_diagram_url %}
+                    <div class="graph-container">
+                        <img src="{{ class_diagram_url }}" alt="Class Diagram" class="graph-image">
+                    </div>
+                    {% else %}
+                    <div class="graph-placeholder">
+                        <div class="icon">📦</div>
+                        <p>No classes defined.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div id="class-diagram-interactive" class="view-interactive">
+                    <div class="mermaid-container">
+                        <pre class="mermaid">{{ class_diagram_mermaid }}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import Graph Tab -->
+            <div id="import-graph" class="tab-content">
+                <div class="tab-explanation">
+                    <strong>What this shows:</strong> External libraries and modules your code depends on.<br>
+                    <strong>Why it matters:</strong> See required packages for your code to work.
+                </div>
+
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" onclick="toggleView('import-graph', 'static')">📊
+                        Static</button>
+                    <button class="view-toggle-btn" onclick="toggleView('import-graph', 'interactive')">✨
+                        Interactive</button>
+                </div>
+
+                <div id="import-graph-static" class="view-static active">
+                    {% if import_graph_url %}
+                    <div class="graph-container">
+                        <img src="{{ import_graph_url }}" alt="Import Graph" class="graph-image">
+                    </div>
+                    {% else %}
+                    <div class="graph-placeholder">
+                        <div class="icon">📥</div>
+                        <p>No imports found.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div id="import-graph-interactive" class="view-interactive">
+                    <div class="mermaid-container">
+                        <pre class="mermaid">{{ import_graph_mermaid }}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Reasoning Tab (Deep Structured Analysis) -->
+            <div id="ai-reasoning" class="tab-content">
+                <div class="tab-explanation">
+                    <strong>What this shows:</strong> Deep, structured analysis of code architecture based on static
+                    analysis.<br>
+                    <strong>Why it matters:</strong> Defensible reasoning suitable for technical review and
+                    presentation.
+                </div>
+
+                <div class="ai-reasoning-card">
+                    <div class="ai-badge">
+                        <span>🧠</span> Deep Architectural Reasoning (Powered by Gemini Pro)
+                    </div>
+
+                    <!-- Layer 1: Analysis Scope -->
+                    <div class="reasoning-layer">
+                        <div class="layer-header">
+                            <span class="layer-number">1</span>
+                            <span class="layer-title">Analysis Scope</span>
+                        </div>
+                        <div class="layer-content">
+                            <div class="reasoning-subsection">
+                                <strong>What was analyzed:</strong>
+                                <p>{{ deep_reasoning.analysis_scope.analyzed }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>What was extracted:</strong>
+                                <p>{{ deep_reasoning.analysis_scope.extracted }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>What was filtered:</strong>
+                                <p>{{ deep_reasoning.analysis_scope.filtered }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 2: Structural Understanding -->
+                    <div class="reasoning-layer">
+                        <div class="layer-header">
+                            <span class="layer-number">2</span>
+                            <span class="layer-title">Structural Understanding</span>
+                        </div>
+                        <div class="layer-content">
+                            <div class="reasoning-subsection">
+                                <strong>Organization:</strong>
+                                <p>{{ deep_reasoning.structural_understanding.organization }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>Entry points:</strong>
+                                <p>{{ deep_reasoning.structural_understanding.entry_points }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>Responsibility distribution:</strong>
+                                <p>{{ deep_reasoning.structural_understanding.responsibility }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 3: Interaction Reasoning -->
+                    <div class="reasoning-layer">
+                        <div class="layer-header">
+                            <span class="layer-number">3</span>
+                            <span class="layer-title">Interaction Reasoning</span>
+                        </div>
+                        <div class="layer-content">
+                            <div class="reasoning-subsection">
+                                <strong>How components interact:</strong>
+                                <p>{{ deep_reasoning.interaction_reasoning.interactions }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>Coordination patterns:</strong>
+                                <p>{{ deep_reasoning.interaction_reasoning.coordination }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>Isolated vs connected:</strong>
+                                <p>{{ deep_reasoning.interaction_reasoning.isolation }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 4: Dependency Reasoning -->
+                    <div class="reasoning-layer">
+                        <div class="layer-header">
+                            <span class="layer-number">4</span>
+                            <span class="layer-title">Dependency Reasoning</span>
+                        </div>
+                        <div class="layer-content">
+                            <div class="reasoning-subsection">
+                                <strong>Component dependencies:</strong>
+                                <p>{{ deep_reasoning.dependency_reasoning.dependencies }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>Structural reasons:</strong>
+                                <p>{{ deep_reasoning.dependency_reasoning.reasons }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>Change impact:</strong>
+                                <p>{{ deep_reasoning.dependency_reasoning.impact }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 5: Architectural Insight -->
+                    <div class="reasoning-layer">
+                        <div class="layer-header">
+                            <span class="layer-number">5</span>
+                            <span class="layer-title">Architectural Insight</span>
+                        </div>
+                        <div class="layer-content">
+                            <div class="reasoning-subsection">
+                                <strong>Design pattern:</strong>
+                                <p>{{ deep_reasoning.architectural_insight.pattern }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>System topology:</strong>
+                                <p>{{ deep_reasoning.architectural_insight.topology }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>Structural strengths:</strong>
+                                <p>{{ deep_reasoning.architectural_insight.strengths }}</p>
+                            </div>
+                            <div class="reasoning-subsection">
+                                <strong>Structural risks:</strong>
+                                <p>{{ deep_reasoning.architectural_insight.risks }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graph-Specific Reasoning -->
+                    <div class="graph-reasoning-section">
+                        <h3
+                            style="color: var(--accent-blue); margin-top: 28px; margin-bottom: 16px; font-size: 1.1rem;">
+                            📊 Graph-Specific Analysis
+                        </h3>
+
+                        <!-- Call Graph Reasoning -->
+                        <div class="graph-specific-card">
+                            <div class="graph-specific-header">🔗 Call Graph Insights</div>
+                            <div class="graph-specific-content">
+                                <p><strong>Entry points:</strong> {{
+                                    deep_reasoning.graph_reasoning.call_graph.entry_points }}</p>
+                                <p><strong>Flow:</strong> {{ deep_reasoning.graph_reasoning.call_graph.flow }}</p>
+                                <p><strong>Control:</strong> {{ deep_reasoning.graph_reasoning.call_graph.control }}</p>
+                                <p><strong>Impact:</strong> {{ deep_reasoning.graph_reasoning.call_graph.impact }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Class Diagram Reasoning -->
+                        <div class="graph-specific-card">
+                            <div class="graph-specific-header">📦 Class Diagram Insights</div>
+                            <div class="graph-specific-content">
+                                <p><strong>Responsibilities:</strong> {{
+                                    deep_reasoning.graph_reasoning.class_diagram.responsibilities }}</p>
+                                <p><strong>Methods:</strong> {{ deep_reasoning.graph_reasoning.class_diagram.methods }}
+                                </p>
+                                <p><strong>Relationships:</strong> {{
+                                    deep_reasoning.graph_reasoning.class_diagram.relationships }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Import Graph Reasoning -->
+                        <div class="graph-specific-card">
+                            <div class="graph-specific-header">📥 Import Graph Insights</div>
+                            <div class="graph-specific-content">
+                                <p><strong>Dependencies:</strong> {{
+                                    deep_reasoning.graph_reasoning.import_graph.dependencies }}</p>
+                                <p><strong>Critical:</strong> {{ deep_reasoning.graph_reasoning.import_graph.critical }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Why Visualizations Matter -->
+                        <div
+                            style="background: linear-gradient(135deg, rgba(69, 183, 209, 0.1), rgba(187, 134, 252, 0.1)); border-radius: 10px; padding: 18px; margin-top: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <p style="margin: 0; font-size: 0.9rem; color: var(--text-primary);">
+                                <strong>💡 Why Graphs Matter:</strong> {{ deep_reasoning.graph_reasoning.visual_value }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.72rem; color: #555; margin-top: 16px; text-align: center;">
+                    ℹ️ All reasoning is derived from static AST analysis. No runtime speculation.
+                </p>
+            </div>
+
+            <!-- Data Flow & Structure Tab -->
+            <div id="data-flow" class="tab-content">
+                <div class="tab-explanation">
+                    <strong>What this shows:</strong> How data moves through your code from entry to exit.<br>
+                    <strong>Why it matters:</strong> Understand the complete data transformation pipeline at a glance.
+                </div>
+
+                <!-- Data Flow Diagram -->
+                <h3 style="color: var(--accent-blue); margin-top: 24px; margin-bottom: 16px; font-size: 1.1rem;">
+                    📊 Data Flow Structure
+                </h3>
+
+                <div class="mermaid-container">
+                    <pre class="mermaid">{{ data_flow_diagram }}</pre>
+                </div>
+
+                <!-- Data Flow Analysis -->
+                <h3 style="color: var(--accent-blue); margin-top: 28px; margin-bottom: 16px; font-size: 1.1rem;">
+                    🔍 Data Flow Analysis
+                </h3>
+
+                <div class="ai-reasoning-card" style="margin-bottom: 18px;">
+                    <div class="reasoning-subsection">
+                        <strong>📥 Data Entry Points:</strong>
+                        <p>{{ data_flow_reasoning.entry_explanation }}</p>
+                    </div>
+
+                    <div class="reasoning-subsection">
+                        <strong>⚙️ Data Processing Stages:</strong>
+                        <p>{{ data_flow_reasoning.processing_explanation }}</p>
+                    </div>
+
+                    <div class="reasoning-subsection">
+                        <strong>🔀 Data Coordination:</strong>
+                        <p>{{ data_flow_reasoning.coordination_explanation }}</p>
+                    </div>
+
+                    <div class="reasoning-subsection">
+                        <strong>📤 Data Exit Points:</strong>
+                        <p>{{ data_flow_reasoning.exit_explanation }}</p>
+                    </div>
+                </div>
+
+                <!-- Diagram Explanation -->
+                <div
+                    style="background: linear-gradient(135deg, rgba(69, 183, 209, 0.1), rgba(187, 134, 252, 0.1)); border-radius: 10px; padding: 18px; margin-top: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-primary);">
+                        <strong>💡 How to Read This Diagram:</strong> {{ data_flow_reasoning.diagram_explanation }}
+                    </p>
+                </div>
+
+                <!-- Connection to Other Graphs -->
+                <div
+                    style="background: rgba(78, 205, 196, 0.08); border-radius: 10px; padding: 18px; margin-top: 16px; border: 1px solid rgba(78, 205, 196, 0.2);">
+                    <p style="margin: 0; font-size: 0.88rem; color: var(--text-primary);">
+                        <strong>🔗 Connection to Other Graphs:</strong> {{
+                        data_flow_reasoning.connection_to_graphs }}
+                    </p>
+                </div>
+
+                <p style="font-size: 0.72rem; color: #555; margin-top: 16px; text-align: center;">
+                    ℹ️ Data flow analysis is based on AST-extracted function signatures and call patterns.
+                </p>
+            </div>
+
+            <!-- Call List Tab -->
+            <div id="call-list" class="tab-content">
+                <div class="tab-explanation">
+                    <strong>What this shows:</strong> Every function call with exact line numbers.<br>
+                    <strong>Why it matters:</strong> Useful for debugging and understanding call sequences.
+                </div>
+                {% if data.calls %}
+                <ul class="call-list">
+                    {% for call in data.calls %}
+                    <li class="call-item">
+                        <span class="call-line">L{{ call.line }}</span>
+                        <code style="color: var(--accent-purple); font-weight: 600;">{{ call.caller_scope }}</code>
+                        <span class="call-arrow">→</span>
+                        <code style="color: var(--accent-blue); font-weight: 600;">{{ call.callee }}</code>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="graph-placeholder">
+                    <div class="icon">📋</div>
+                    <p>No function calls detected.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Code Details -->
+        <div class="glass-card animate-in delay-4">
+            <h2>📥 Imports</h2>
+            {% if data.imports %}
+            <div class="code-block">
+                {% for imp in data.imports %}
+                <div>
+                    <span style="color: #c586c0;">{% if imp.module %}from{% else %}import{% endif %}</span>
+                    {% if imp.module %}<span style="color: #9cdcfe;">{{ imp.module }}</span> <span
+                        style="color: #c586c0;">import</span>{% endif %}
+                    <span style="color: #4ec9b0;">{{ imp.name }}</span>
+                    {% if imp.asname %}<span style="color: #c586c0;"> as</span> <span style="color: #dcdcaa;">{{
+                        imp.asname }}</span>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="margin-bottom: 0;">No imports found.</p>
+            {% endif %}
+        </div>
+
+        <div class="glass-card animate-in delay-5">
+            <h2>📦 Classes Defined</h2>
+            {% if data.classes %}
+            {% for cls in data.classes %}
+            <div class="item">
+                <h3>
+                    <span class="badge">class</span>{{ cls.name }}
+                    {% if cls.bases %}<span
+                        style="font-weight: 400; font-size: 0.85em; color: var(--text-secondary);">({{ cls.bases|join(',
+                        ') }})</span>{% endif %}
+                </h3>
+                {% if cls.docstring %}<p class="docstring">"""{{ cls.docstring }}"""</p>{% endif %}
+                {% if cls.methods %}
+                <div style="margin-left: 16px; margin-top: 14px;">
+                    <h4 style="color: var(--accent-blue); font-size: 0.9rem; margin-bottom: 10px;">Methods</h4>
+                    {% for method in cls.methods %}
+                    <div style="margin-bottom: 6px;">
+                        <code
+                            style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 6px; color: #dcdcaa; font-size: 0.85rem;">
+                            {{ method.name }}({{ method.args|join(', ') }})
+                        </code>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="margin-bottom: 0;">No classes found.</p>
+            {% endif %}
+        </div>
+
+        <div class="glass-card animate-in delay-5">
+            <h2>⚡ Standalone Functions</h2>
+            {% if data.functions %}
+            {% for func in data.functions %}
+            <div class="item">
+                <h3><span class="badge">def</span>{{ func.name }}({{ func.args|join(', ') }})</h3>
+                {% if func.docstring %}<p class="docstring">"""{{ func.docstring }}"""</p>{% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="margin-bottom: 0;">No standalone functions found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+
+            // Re-render Mermaid diagrams when tab becomes visible
+            if (tabName !== 'ai-reasoning' && tabName !== 'call-list') {
+                setTimeout(() => mermaid.init(), 100);
+            }
+        }
+
+        function toggleView(tabId, viewType) {
+            const staticView = document.getElementById(tabId + '-static');
+            const interactiveView = document.getElementById(tabId + '-interactive');
+            const buttons = document.querySelectorAll(`#${tabId} .view-toggle-btn`);
+
+            if (viewType === 'static') {
+                staticView.classList.add('active');
+                interactiveView.classList.remove('active');
+                buttons[0].classList.add('active');
+                buttons[1].classList.remove('active');
+            } else {
+                staticView.classList.remove('active');
+                interactiveView.classList.add('active');
+                buttons[0].classList.remove('active');
+                buttons[1].classList.add('active');
+                setTimeout(() => mermaid.init(), 100);
+            }
+        }
+
+        function showReport() {
+            document.getElementById('reportModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideReport() {
+            document.getElementById('reportModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') hideReport(); });
+    </script>
+</body>
+
+</html>
